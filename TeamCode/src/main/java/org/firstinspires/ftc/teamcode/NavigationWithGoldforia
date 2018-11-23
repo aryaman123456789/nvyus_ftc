@@ -1,4 +1,3 @@
-//you need this code to run NavigationWithGolforia! (that goes without saying, doesn't it?)
 package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
