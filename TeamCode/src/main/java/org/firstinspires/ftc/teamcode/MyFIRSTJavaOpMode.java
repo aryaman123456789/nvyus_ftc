@@ -1,0 +1,124 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+//this is the basic code which moves the robot and the arm
+
+
+@TeleOp
+public class MyFIRSTJavaOpMode extends LinearOpMode {
+
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
+    private DcMotor arm = null;
+    private DcMotor lift = null;
+    private CRServo capturing = null;
+    private Servo grip = null;
+    DcMotor left;
+    DcMotor right;
+
+    @Override
+    public void runOpMode() {
+        //imu = hardwareMap.get(Gyroscope.class, "imu");
+        //DcMotor motorTest = hardwareMap.get(DcMotor.class, "motorTest");
+        //DigitalChannel digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+        //DistanceSensor sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
+        //Servo servoTest = hardwareMap.get(Servo.class, "servoTest");
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        arm = hardwareMap.get(DcMotor.class,"arm");
+        lift = hardwareMap.get(DcMotor.class, "lift");
+        grip = hardwareMap.get(Servo.class, "grip");
+        capturing = hardwareMap.get(CRServo.class,"capturing");
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
+
+        while (opModeIsActive()) {
+
+            doAutolanding();
+
+            double leftPower;
+            double rightPower;
+            //change the negative
+            boolean button_press = gamepad2.a;
+            boolean reverse_button_press = gamepad2.b;
+            boolean button_lift = gamepad2.x;
+            boolean reverse_button_lift = gamepad2.y;
+            boolean button_grip_close = gamepad2.left_bumper;
+            boolean button_grip_open = gamepad2.right_bumper;
+            double drive = gamepad1.left_stick_y;
+            double turn  = gamepad1.right_stick_x;
+            leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
+            capturing.setPower(200);
+            leftDrive.setPower(leftPower);
+            rightDrive.setPower(rightPower);
+            if (button_press == true) {
+                arm.setPower(1000);
+                sleep(250);
+                arm.setPower(0);
+            }
+            if (reverse_button_press == true) {
+                arm.setPower(-1000);
+                sleep(250);
+                arm.setPower(0);
+            }
+            // Lift up the robot when gamepad 2 B button is pressed.
+            if (button_lift == true) {
+                lift.setPower(1000);
+                sleep(250);
+                lift.setPower(0);
+            }
+            if (reverse_button_lift == true) {
+                lift.setPower(-1000);
+                sleep(250);
+                lift.setPower(0);
+            }
+            if (button_grip_close == true) {
+                grip.setPosition(0); // Grip Close
+            }
+            if (button_lift == true)  {
+                lift.setPower(1000);
+                sleep(250);
+                lift.setPower(0);
+            }
+            if (button_grip_open == true) {
+                grip.setPosition(100); // Grip Open
+            }
+            if (button_lift == true)  {
+                lift.setPower(1000);
+                sleep(250);
+                lift.setPower(0);
+            }
+
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.update();
+            // run until the end of the match (driver presses STOP)
+
+        }
+    }
+
+    // Function to land the vehicle in Autonomous mode.
+    public void doAutolanding() {
+        lift.setPower(1000);
+        sleep(1000);
+        lift.setPower(0);
+        grip.setPosition(100); // Grip Open
+        lift.setPower(-1000);
+        sleep(1000);
+    }
+
+}
