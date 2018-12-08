@@ -1,13 +1,3 @@
-/**
-STRUCTURE FOR AUTONOMOUS OP MODE
-Currently in work by Justin
-Don't use if you don't understand what's going on
-*
-*
-*
-*
-*
-*/
 package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
@@ -43,7 +33,7 @@ public class SampleAutonomous extends LinearOpMode {
         //hardware mapping
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        back_leftDrive  = hardwareMap.get(DcMotor.class, "back_left_drive");
+        back_leftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         back_rightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         arm = hardwareMap.get(DcMotor.class, "arm");
         capturing = hardwareMap.get(CRServo.class, "capturing");
@@ -60,19 +50,64 @@ public class SampleAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
 
         waitForStart();
+        telemetry.addData("Currently: ", "Running");
+        telemetry.update();
+        while(opModeIsActive()){
+            //START
+            /**
+             for(int i = 0; i < 1000; i++){
+             //DRIVING IN SQUARES
 
-        telemetry.addData("Time passed: ", runTime.toString());
+             DriveForwardTime(-1, 1500);
+             TurnRightTime(-1, 1000);
+             DriveForwardTime(-1, 1500);
+             TurnRightTime(-1, 1000);
+             DriveForwardTime(-1, 1500);
+             TurnRightTime(-1, 1000);
+             DriveForwardTime(-1, 1500);
+             TurnRightTime(-1, 1000);
+             }
+             */
 
-        // Show the elapsed game time, wheel power, and capturing power
-        telemetry.addData("Le StAtUs", "Le InitIaliZation TiMe: " + runtime.toString());
 
-        //telemetry.addData("Status","Finished. Now cut me some slack.");
+
+
+             //LANDING
+             GripOpen(0);
+             sleep(1000);
+             //LiftDown(-100,5000);
+             TurnRightTime(-1,1500);
+
+             DriveForwardTime(-1,1500);
+
+            //asdf
+
+            /** DRIVING AROUND
+            DriveForwardTime(-1,1500);
+            TurnLeftTime(-1,1000);
+            sleep(500);
+            DriveForwardTime(-1,1500);
+            sleep(500);
+            TurnLeftTime(-1,1000);
+            StopDriving();
+            */
+
+
+
+            telemetry.addData("Time passed: ", runTime.toString());
+
+            // Show the elapsed game time, wheel power, and capturing power
+            telemetry.addData("Le StAtUs", "Le InitIaliZation TiMe: " + runtime.toString());
+
+            //telemetry.addData("Status","Finished. Now cut me some slack.");
+        }
+
     }
-
+    //back left is only motor that spins the correct direction
     public void DriveForward(double power){
         leftDrive.setPower(power);
         rightDrive.setPower(power);
-        back_leftDrive.setPower(power);
+        back_leftDrive.setPower(-power);
         back_rightDrive.setPower(power);
     }
     public void DriveForwardTime(double power, long time){
@@ -83,7 +118,7 @@ public class SampleAutonomous extends LinearOpMode {
         DriveForward(0);
     }
     public void TurnLeft(double power){
-        leftDrive.setPower(power);
+        leftDrive.setPower(-power);
         rightDrive.setPower(power);
         back_leftDrive.setPower(power);
         back_rightDrive.setPower(power);
@@ -94,7 +129,7 @@ public class SampleAutonomous extends LinearOpMode {
     }
     public void TurnRight(double power){
         leftDrive.setPower(power);
-        rightDrive.setPower(power);
+        rightDrive.setPower(-power);
         back_leftDrive.setPower(-power);
         back_rightDrive.setPower(-power);
     }
@@ -104,10 +139,12 @@ public class SampleAutonomous extends LinearOpMode {
     }
     public void LiftDown(double power, long time){
         lift.setPower(power);
+        sleep(time);
 
     }
-    public void GripOpen(double power, long time){
+    public void GripOpen(long position){
         grip.setPosition(100);
+
     }
 
 }
