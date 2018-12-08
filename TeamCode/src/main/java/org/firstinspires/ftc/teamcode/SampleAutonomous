@@ -73,12 +73,15 @@ public class SampleAutonomous extends LinearOpMode {
 
 
              //LANDING
-             GripOpen(0);
+             GripOpen(1);
              sleep(1000);
              //LiftDown(-100,5000);
-             TurnRightTime(-1,1500);
 
-             DriveForwardTime(-1,1500);
+
+            TurnRightTime(-1,360);
+            sleep(100);
+            TurnRightTime(0,0);
+
 
             //asdf
 
@@ -100,6 +103,7 @@ public class SampleAutonomous extends LinearOpMode {
             telemetry.addData("Le StAtUs", "Le InitIaliZation TiMe: " + runtime.toString());
 
             //telemetry.addData("Status","Finished. Now cut me some slack.");
+            break;
         }
 
     }
