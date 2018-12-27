@@ -37,8 +37,6 @@ public class AutonomousGoodCrater extends LinearOpMode {
 
     //motors and such
     private DcMotor lift = null;
-    private Servo grip = null;
-    private Servo claim = null;
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor back_leftDrive = null;
