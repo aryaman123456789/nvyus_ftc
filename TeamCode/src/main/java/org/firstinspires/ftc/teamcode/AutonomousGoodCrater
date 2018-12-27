@@ -59,8 +59,6 @@ public class AutonomousGoodCrater extends LinearOpMode {
         back_leftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         back_rightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         lift = hardwareMap.get(DcMotor.class, "lift");
-        grip = hardwareMap.get(Servo.class, "grip");
-        claim = hardwareMap.get(Servo.class, "claim");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
