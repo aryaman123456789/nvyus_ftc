@@ -59,11 +59,11 @@ public class AutonomousGoodCrater extends LinearOpMode {
         back_leftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         back_rightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         lift = hardwareMap.get(DcMotor.class, "lift");
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
         back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
@@ -71,19 +71,21 @@ public class AutonomousGoodCrater extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            LiftDown(1, 500);
-            sleep(100);
-            leftDrive.setPower(1);
-            back_leftDrive.setPower(1);
-            rightDrive.setPower(1);
-            back_rightDrive.setPower(1);
-            sleep(3000);
+            //maybe tune this down 500 milliseconds later
+            LiftDown(1, 8000);
+            sleep(1000);
+            LiftDown(0,500);
+            rightDrive.setPower(0.5);
+            back_rightDrive.setPower(0.5);
+            sleep(500);
+            leftDrive.setPower(0.5);
+            back_leftDrive.setPower(0.5);
+            sleep(2000);
             leftDrive.setPower(0);
             back_leftDrive.setPower(0);
             rightDrive.setPower(0);
             back_rightDrive.setPower(0);
-            sleep(100);
-            leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+            //leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
             /** Activate Tensor Flow Object Detection. */
             /* turning around
