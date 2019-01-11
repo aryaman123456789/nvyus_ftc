@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.database.sqlite.SQLiteOpenHelper;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -21,6 +23,9 @@ public class OnlySampling extends LinearOpMode {
     private DcMotor rightDrive = null;
     private DcMotor back_leftDrive = null;
     private DcMotor back_rightDrive = null;
+    private DcMotor arm = null;
+    private DcMotor arm2 = null;
+    private DcMotor extension = null;
 
 
     @Override
@@ -38,6 +43,9 @@ public class OnlySampling extends LinearOpMode {
         back_leftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
         back_rightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         lift = hardwareMap.get(DcMotor.class, "lift");
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm2 = hardwareMap.get(DcMotor.class, "arm");
+        extension = hardwareMap.get(DcMotor.class,"extension");
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -52,55 +60,62 @@ public class OnlySampling extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("goldPosition was", goldPosition);// giving feedback
-
             switch (goldPosition) { // using for things in the autonomous program
                 case LEFT:
                     lift.setDirection(DcMotorSimple.Direction.FORWARD);
                     telemetry.addLine("going to the left");
-                    BackMove(0.3,1000);
+                    CenterCrab(1,2500);
+                    LeftDiagonal(0.3,1000);
+                    ArmUpAndShoot(1,2000);
+                    //BackMove(0.3,2000);
                     //maybe put these directions
-                    CenterCrab(0.5,3000);
+                    /*CenterCrab(0.5,3000);
                     FrontMove(0.3,2000);
-                    CenterCrab(0.5,3000);
+                    CenterCrab(0.5,3000);*/
                     break;
                 case CENTER:
                     lift.setDirection(DcMotorSimple.Direction.FORWARD);
                     telemetry.addLine("going straight");
-                    BackMove(0.3,1500);
+                    BackMove(0.3,500);
                     //maybe put these directions in the center crab module
-                    CenterCrab(1,3000);
+                    CenterCrab(1,2000);
                     /*rightDrive.setPower(0);
                     back_rightDrive.setPower(0);
                     leftDrive.setPower(0);
                     back_leftDrive.setPower(0);*/
                     break;
                 case RIGHT:
-                    lift.setDirection(DcMotorSimple.Direction.FORWARD);
-                    LiftDown(1,7000);
+                    //lift.setDirection(DcMotorSimple.Direction.FORWARD);
+                    //LiftDown(1,7000);
                     telemetry.addLine("going to the right");
-                    BackMove(0.3,2000);
-                    rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-                    back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-                    leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-                    CenterCrab(1,1500);
+                    RightDiagonal(1,3000);
+                    CenterCrab(1,1000);
+                    ArmUpAndShoot(1,2000);
                     break;
                 case UNKNOWN:
-                    lift.setDirection(DcMotorSimple.Direction.FORWARD);
-                    LiftDown(1,7000);
+                    //lift.setDirection(DcMotorSimple.Direction.FORWARD);
+                    //LiftDown(1,7000);
+                    /*telemetry.addLine("going to the right");
+                    BackMove(0.3,500);
+                    sleep(1000);
+                    CenterCrab(1,1000);
+                    sleep(1000);
+                    BackMove(0.3,1000);
+                    sleep(1000);
+                    CenterCrab(1,2000); */
                     telemetry.addLine("going to the right");
-                    BackMove(0.3,2000);
-                    rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-                    back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-                    back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-                    leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-                    CenterCrab(1,1500);
+                    RightDiagonal(1,3000);
+                    CenterCrab(1,1000);
+                    ArmUpAndShoot(1,2000);
                     break;
             }
 
             telemetry.update();
+            break;
         }
 
         vision.shutdown();
+
     }
 
     public void LiftDown(double power, long time) {
@@ -121,6 +136,10 @@ public class OnlySampling extends LinearOpMode {
     }
 
     public void CenterCrab(double power, long time) {
+        back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftDrive.setPower(power);
         rightDrive.setPower(power);
         back_leftDrive.setPower(power);
@@ -132,11 +151,66 @@ public class OnlySampling extends LinearOpMode {
         back_rightDrive.setPower(0);
     }
 
+    public void RightDiagonal(double power, long time) {
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setPower(1);
+        rightDrive.setPower(power);
+        back_rightDrive.setPower(0.1);
+        leftDrive.setPower(0.1);
+        back_leftDrive.setPower(power);
+        sleep(time);
+        rightDrive.setPower(0);
+        back_rightDrive.setPower(0);
+        leftDrive.setPower(0);
+        back_leftDrive.setPower(0);
+        lift.setPower(0);
+    }
+
+    public void LeftDiagonal(double power, long time) {
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        back_rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setPower(1);
+        rightDrive.setPower(0.1);
+        back_rightDrive.setPower(power);
+        leftDrive.setPower(power);
+        back_leftDrive.setPower(0.1);
+        sleep(time);
+        rightDrive.setPower(0);
+        back_rightDrive.setPower(0);
+        leftDrive.setPower(0);
+        back_leftDrive.setPower(0);
+        lift.setPower(0);
+    }
+
+    public void SlightLeft (double power, long time) {
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        back_rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDrive.setPower(0.4);
+        back_rightDrive.setPower(power);
+        leftDrive.setPower(power);
+        back_leftDrive.setPower(0.4);
+        sleep(time);
+        rightDrive.setPower(0);
+        back_rightDrive.setPower(0);
+        leftDrive.setPower(0);
+        back_leftDrive.setPower(0);
+    }
     public void BackMove(double power, long time) {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         back_rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         back_leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setPower(1);
         rightDrive.setPower(power);
         back_rightDrive.setPower(power);
         leftDrive.setPower(power);
@@ -146,6 +220,7 @@ public class OnlySampling extends LinearOpMode {
         back_rightDrive.setPower(0);
         leftDrive.setPower(0);
         back_leftDrive.setPower(0);
+        lift.setPower(0);
     }
 
     public void FrontMove(double power, long time) {
@@ -163,5 +238,37 @@ public class OnlySampling extends LinearOpMode {
         leftDrive.setPower(0);
         back_leftDrive.setPower(0);
     }
+
+    public void Spino(double power, long time) {
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        back_rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        back_leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setPower(power);
+        back_rightDrive.setPower(power);
+        leftDrive.setPower(power);
+        back_leftDrive.setPower(power);
+        sleep(time);
+        rightDrive.setPower(0);
+        back_rightDrive.setPower(0);
+        leftDrive.setPower(0);
+        back_leftDrive.setPower(0);
+    }
+
+    public void ArmUpAndShoot(double power, long time) {
+        arm.setDirection(DcMotor.Direction.FORWARD);
+        arm2.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setPower(power);
+        arm2.setPower(power);
+        extension.setPower(power);
+        sleep(time);
+        arm.setPower(power);
+        arm2.setPower(power);
+        extension.setPower(power);
+
+    }
+
+
+
 
 }
