@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 
 /**
  working version
-    no grip yet
+ no more grip
  */
 
 @TeleOp(name="Le THIRD AvA jOp Mode", group="Iterative Opmode")
