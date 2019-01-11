@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class LeTHIRDAvaJopMode extends OpMode
 {
-    // Declare motors and servosn321477\]
+    // Declare motors and servos
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
